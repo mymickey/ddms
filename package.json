@@ -11,7 +11,7 @@
     "url": "https://github.com/unbug"
   },
   "scripts": {
-    "start": "node ./bin/www & node ./bin/api"
+    "start": "node-dev ./bin/www & node ./bin/api"
   },
   "keywords": [
     "Form System",
@@ -41,6 +41,12 @@
     "react": "^0.13.3",
     "serve-favicon": "~2.2.0",
     "shortid": "^2.2.2",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+
+    "nomnom":"1.8.0",
+    "node-uuid":"1.4.1",
+    "images":"latest",
+    "connect-busboy":"0.0.1",
+    "fileutil":"1.1.1"
   }
 }

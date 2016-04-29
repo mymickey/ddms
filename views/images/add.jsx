@@ -6,7 +6,9 @@ module.exports = React.createClass({
   render: function () {
     var uploadConfig = this.props.uploadConfig;
     var scripts = [
+      '/js/components/jquery.form.js',
       '/js/components/Images.add.js'
+
     ];
     return (
       <DefaultLayout title="Add Image" scripts={scripts}>
@@ -18,7 +20,7 @@ module.exports = React.createClass({
               <div className="col-xs-12"><h3><a href="/images/">Images</a> / Add a new image</h3></div>
             </div>
             <iframe name="_if" id="_if" style={{display: 'none'}} src="javascript:void(0)"></iframe>
-            <form role="form" id="upload_form" target="_if" method="POST" encType="multipart/form-data">
+            <form role="form" id="upload_form"  method="POST" encType="multipart/form-data">
               <div className="form-group">
                 <label htmlFor="file">Upload a new image</label>
                 <input type="file" className="form-control" id="file" name="file"/>
@@ -27,7 +29,7 @@ module.exports = React.createClass({
                 <label htmlFor="tags">Tags</label>
                 <input type="text" className="form-control" id="tags" name="tags" placeholder="tag1,tag2,tag3"/>
               </div>
-              <button type="submit" className="btn btn-default">Upload</button>
+              <button type="submit" className="btn btn-default" id="fileUpload">Upload</button>
             </form>
             <div className="row row-same-height">
               <div className="col-xs-12"><h3>Or</h3></div>

@@ -1,6 +1,8 @@
 var Promise = require("bluebird");
 var Actions = require('../helpers/Actions');
 
+
+
 exports.showList = function (req, res, next) {
   var tags = req.query.tags;
   if(tags){
@@ -58,3 +60,5 @@ exports.deleteImage = function (req, res, next) {
       return next(error);
     });
 };
+
+

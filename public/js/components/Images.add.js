@@ -1,5 +1,5 @@
 ;(function(){
-  var uploadConfig = window.__upload_config || {upload: '',server: ''};
+  var uploadConfig = window.__upload_config || {upload: './fileUpload',server: ''};
   var thisHost = Core.localHost;
   var a = document.createElement('a'); a.href = uploadConfig.upload;
   var uploadHost = a.protocol + "//" + a.hostname + (a.port ? ':' + a.port : '');
@@ -12,7 +12,7 @@
     thisHost: thisHost,
     uploadHost: uploadHost,
     serverHost: uploadConfig.server,
-    uploadImage: uploadConfig.upload+'?redirect_url='+thisHost+'/img_upload_done.html'
+    uploadImage: './fileUpload'
   }
   var Mdl = Core.Class.Model,
     getJSON = Core.RequestHandler.getJSON,
@@ -105,3 +105,21 @@
   }
   new Controller();
 }());
+
+$(document).ready(function() {
+  var form = $('#upload_form');
+  form.submit(function(){
+    $('#fileUpload').text('uploading')[0].disabled= true;
+  })
+  form.ajaxForm(function(jsonStr) {
+    $('#fileUpload').text('Upload')[0].disabled =false;
+    form.resetForm();
+    if (typeof jsonStr =='string'){
+      var json = JSON.parse(jsonStr);
+      if (json.files.length){
+        alert('文件上传完成'+jsonStr)
+      }
+    }
+    console.log("Thank you for your upload!",arguments);
+  });
+});
