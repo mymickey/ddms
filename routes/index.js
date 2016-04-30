@@ -1,5 +1,8 @@
 exports.user = require('./user');
 exports.project = require('./project');
+exports.pageProject = require('./pageProject');
+exports.page = require('./page');
+exports.sync = require('./syncToCDN');
 exports.admin = require('./admin');
 exports.form = require('./form');
 exports.formData = require('./formData');

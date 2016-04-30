@@ -53,7 +53,7 @@ var navigation = React.createClass({
                 <a href="/images"><i className="fa fa-photo fa-fw"/> Images</a>
               </li>
               <li>
-                <a href="/pages"><i className="fa fa-html5 fa-fw"/> Pages</a>
+                <a href="/pageProjects"><i className="fa fa-html5 fa-fw"/> Pages</a>
               </li>
               <li>
                 <a href="/apidocs.html" target="_blank"><i className="fa fa-info-circle fa-fw"/> API Docs</a>

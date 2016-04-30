@@ -1,5 +1,5 @@
 ;(function(){
-  var uploadConfig = window.__upload_config || {upload: './fileUpload',server: ''};
+  var uploadConfig =  {upload: '../fileUpload',server: ''};
   var thisHost = Core.localHost;
   var a = document.createElement('a'); a.href = uploadConfig.upload;
   var uploadHost = a.protocol + "//" + a.hostname + (a.port ? ':' + a.port : '');
@@ -12,7 +12,7 @@
     thisHost: thisHost,
     uploadHost: uploadHost,
     serverHost: uploadConfig.server,
-    uploadImage: './fileUpload'
+    uploadImage: uploadConfig.upload
   }
   var Mdl = Core.Class.Model,
     getJSON = Core.RequestHandler.getJSON,

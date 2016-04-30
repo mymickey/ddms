@@ -5,16 +5,15 @@ var fs = require('fs');
 var fu = require('fileutil');
 var uuid = require('node-uuid');
 var uploadOSS = require('../oss/upload-oss');
-
+var isImg = require('../oss/upload-oss/isImg').isImg
 var fileSizeLimit = 5 * 1024 * 1024;
 var uploadDir = path.join(__dirname,'uploads');
 if (!fu.exist(uploadDir)) {fu.mkdir(uploadDir)};
-
-exports.updateFile = function (req, res, next) {
+function _upload(req,res,fName,cb){
   var limited = false,fstream;
   req.pipe(req.busboy);
   req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-    var uuidName = uuid.v4();
+    var uuidName =  fName || uuid.v4();
     var extName = path.extname(filename)
     var saveTo = path.join(uploadDir, uuidName+extName);
     fstream = fs.createWriteStream(saveTo);
@@ -25,20 +24,48 @@ exports.updateFile = function (req, res, next) {
       }
       if(!limited){
         upload(saveTo,function(err,url){
-          uploadComplete(err,url,res,req);
+          cb(err,url,res,req);
           deleteDoneFile(saveTo)
         });
       }
       else{
         deleteDoneFile(saveTo)
-        uploadComplete({msg:'文件尺寸不合规'},' ',res);
+        cb({msg:'文件尺寸不合规'},' ',res,req);
       }
-
-
-
     });
 
   });
+};
+exports.upload = _upload;
+exports.updateFile = function (req, res, next) {
+  _upload(req,res,uuid.v4(),function(err,url,res,req){
+    uploadComplete(err,url,res,req)
+  })
+  // var limited = false,fstream;
+  // req.pipe(req.busboy);
+  // req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+  //   var uuidName =  uuid.v4();
+  //   var extName = path.extname(filename)
+  //   var saveTo = path.join(uploadDir, uuidName+extName);
+  //   fstream = fs.createWriteStream(saveTo);
+  //   file.pipe(fstream);
+  //   fstream.on('close', function () {
+  //     if(fs.statSync(saveTo).size > 0 && fs.statSync(saveTo).size > fileSizeLimit){
+  //       limited = true;
+  //     }
+  //     if(!limited){
+  //       upload(saveTo,function(err,url){
+  //         uploadComplete(err,url,res,req);
+  //         deleteDoneFile(saveTo)
+  //       });
+  //     }
+  //     else{
+  //       deleteDoneFile(saveTo)
+  //       uploadComplete({msg:'文件尺寸不合规'},' ',res);
+  //     }
+  //   });
+
+  // });
 }
 function deleteDoneFile(filePath){
   //上传到OSS之后 删除磁盘上的文件
@@ -47,7 +74,7 @@ function deleteDoneFile(filePath){
   };
 }
 function uploadComplete(err, url,res,req){
-  if (!err) {
+  if (!err && isImg(url)) {
     var image = {
       url: url,
       tags: ''
