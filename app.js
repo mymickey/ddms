@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var path = require('path');
+var busboy = require('connect-busboy');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var methodOverride = require('method-override');
@@ -12,16 +13,20 @@ var mongoose = require('mongoose');
 var restify = require('express-restify-mongoose');
 var dbUrl = process.env.MONGOHQ_URL || 'mongodb://localhost/ddms_db';//'mongodb://@localhost:27017/ddms_db';
 var db = mongoose.connect(dbUrl, {safe: true});
-
 var models = require('./models');
 var routes = require('./routes/index');
 var apis = require('./apis/index');
-
+var OSS = require('./oss/upload-oss/index')
+console.log('dbUrl',dbUrl);
 //middlewares
 var authorize = require('./middlewares/authorize');
 var writeLog = require('./middlewares/writeLog');
 var twitterLogin = require('./middlewares/twitterLogin');
 
+
+OSS.init(
+
+)
 //first time runing the app
 //generate a admin user
 routes.user.genAdmin(models.User);
@@ -29,7 +34,7 @@ routes.user.genAdmin(models.User);
 var app = express();
 app.enable('trust proxy');
 app.locals.appTitle = "DDMS";
-
+app.use(busboy());
 app.use(function (req, res, next) {
   if (!models.User) return next(new Error("No models."));
   req.models = models;
@@ -94,6 +99,28 @@ app.get('/projects/update/:id', authorize.editor, routes.project.showUpdateProje
 app.post('/projects/update', writeLog, authorize.editor, routes.project.updateProject);
 app.get('/projects/delete/:id', writeLog, authorize.administrator, routes.project.deleteProject);
 
+
+//page project
+//CRUD
+app.get('/pageProjects', authorize.editor, routes.pageProject.showList);
+app.get('/pageProjects/create', authorize.editor, routes.pageProject.showCreateProject);
+app.post('/pageProjects/create', writeLog, authorize.editor, routes.pageProject.createProject);
+app.get('/pageProjects/update/:id', authorize.editor, routes.pageProject.showUpdateProject);
+app.post('/pageProjects/update', writeLog, authorize.editor, routes.pageProject.updateProject);
+app.get('/pageProjects/delete/:id', writeLog, authorize.administrator, routes.pageProject.deleteProject);
+
+//page
+//CRUD
+app.get('/pagesall', authorize.editor, routes.page.showList);
+app.get('/pages/:projectid', authorize.editor, routes.page.showListByProjectId);
+app.get('/pages/create/:projectid', authorize.editor, routes.page.showCreateForm);
+app.post('/pages/create/:projectid', writeLog, authorize.editor, routes.page.createPage);
+app.get('/pages/update/:id', authorize.editor, routes.page.showUpdateForm);
+app.post('/pages/update', writeLog, authorize.editor, routes.page.updateForm);
+app.get('/pages/delete/:id', writeLog, authorize.administrator, routes.page.deleteForm);
+app.get('/pages/copy/:id', writeLog, authorize.editor, routes.page.copyForm);
+app.post('/pages/syncToCDN', writeLog, authorize.editor, routes.sync.syncToCDN);
+
 //form
 //CRUD
 app.get('/formsall', authorize.editor, routes.form.showList);
@@ -121,6 +148,7 @@ app.get('/images/', authorize.editor, routes.image.showList);
 app.get('/images/create/', authorize.editor, routes.image.showCreateImage);
 app.post('/images/create/', writeLog, authorize.editor, routes.image.createImage);
 app.get('/images/delete/:id', writeLog, authorize.editor, routes.image.deleteImage);
+app.post('/fileUpload',routes.fileUpload.updateFile);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
