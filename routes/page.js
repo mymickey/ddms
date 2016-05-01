@@ -34,13 +34,16 @@ exports.showUpdateForm = function (req, res, next) {
   var id = req.params.id;
   req.models.Page.findOne({
     _id: id
-  }, function (ferror, fres) {
+  })
+  .populate('form',{_id: 1,name: 1,desc: 1})
+  .exec(function (ferror, fres) {
     res.render('pages/edit',{form: fres});
-  });
+  })
 };
 
 exports.createPage = function (req, res, next) {
   var pid = req.params.projectid;
+  var formId = req.params.formId;
   var result = {code: 1,msg: 'ok'};
   var body = req.body;
   if (!body.title & !body.htmlContent){
@@ -54,7 +57,8 @@ exports.createPage = function (req, res, next) {
     title: body.title,
     desc: body.desc,
     htmlContent: body.htmlContent,
-    htmlFileName:body.htmlFileName
+    htmlFileName:body.htmlFileName,
+    form:formId
   }
   req.models.Page.create(form, function (cerror, cres) {
     if (cerror){
@@ -81,16 +85,29 @@ exports.updateForm = function (req, res, next) {
     desc: body.desc,
     htmlContent: body.htmlContent,
     updateDateTime: new Date,
-    formId:body.formId,
+    form:body.formId,
     htmlFileName:body.htmlFileName
   }
-  req.models.Page.update({_id: body._id}, form,function (cerror, cres) {
-    if (cerror){
-      result.code = 0;
-      result.msg = 'Failed!';
+  req.models.Form.findOne({
+    _id:body.formId
+  },function(err,docs){
+    if(err || !docs){
+      res.send({
+        code:0,
+        msg:'form id not found'
+      })
+    }else{
+      req.models.Page.update({_id: body._id}, form,function (cerror, cres) {
+        if (cerror){
+          result.code = 0;
+          result.msg = 'Failed!';
+          result.errMsg = cerror;
+        }
+        res.send(result);
+      });
     }
-    res.send(result);
-  });
+  })
+
 };
 
 exports.deleteForm = function (req, res, next) {
@@ -121,14 +138,19 @@ exports.copyForm = function (req, res, next) {
         project: fres.project,
         user: req.session.user.id,
         title: '[COPY]-'+fres.title,
+
         desc: fres.desc,
-        schemata: fres.schemata
+        htmlContent: fres.htmlContent,
+        updateDateTime: new Date,
+        cdnURL:fres.cdnURL,
+        formId:fres.formId,
+        htmlFileName:fres.htmlFileName
       }
       req.models.Page.create(form, function (cerror, cres) {
         res.redirect('/pages/'+fres.project);
       });
     }else{
-      res.redirect('/forms');
+      res.redirect('/pages');
     }
   });
 };

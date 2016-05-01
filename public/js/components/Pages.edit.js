@@ -70,9 +70,15 @@
   var model = new Model;
 
   var Form = React.createClass({
+    getDefaultProps: function() {
+      var data = window.__formData || {};
+      return {
+        htmlFileName:data.htmlFileName
+      };
+    },
     getInitialState: function(){
       var data = window.__formData || {};
-      return {_id: data._id,title: data.title,desc: data.desc,htmlContent:$('#text-htmlContent').text(),formId:data.formId,htmlFileName:data.htmlFileName}
+      return {_id: data._id,title: data.title,desc: data.desc,htmlContent:$('#text-htmlContent').text(),formId:data.formId,htmlFileName:data.htmlFileName,cdnURL:data.cdnURL}
     },
     componentDidMount: function(){
       $(this.getDOMNode()).on('click','.init-editor',handleEditor);
@@ -141,7 +147,7 @@
             alert('Done!');
             window.location.reload();
           }else{
-            alert('failed!');
+            alert('failed!'+ JSON.stringify(res));
           }
         });
       }else{
@@ -172,6 +178,7 @@
       this.setState({formId: e.target.value});
     },
     render: function () {
+      var hasHtmlFileName = this.props.htmlFileName && $.trim(this.props.htmlFileName).length > 0 
       return (
         <form role="form" className="form-horizontal">
           <div className="form-group">
@@ -192,7 +199,7 @@
           <div className="form-group">
             <label htmlFor="htmlFileName" className="col-xs-2 control-label">htmlFileName*</label>
             <div className="col-xs-6">
-              <input type="text" className="form-control input-sm" id="htmlFileName" name="htmlFileName" value={this.state.htmlFileName} onChange={this.onHtmlFileNameChange}/>
+              <input type="text" className="form-control input-sm" id="htmlFileName" name="htmlFileName" disabled={hasHtmlFileName} value={this.state.htmlFileName} onChange={this.onHtmlFileNameChange}/>
             </div>
           </div>
           <div className="form-group">
@@ -204,12 +211,17 @@
             </div>  
           </div>
           <div className="form-group">
-            <label htmlFor="formId" className="col-xs-2 control-label">form id</label>
+            <label htmlFor="formId" className="col-xs-2 control-label">form id *</label>
             <div className="col-xs-6">
               <input type="text" className="form-control input-sm" id="formId" name="formId" value={this.state.formId} onChange={this.onFormIdChange}/>
             </div>
           </div>
-
+          <div className="form-group">
+            <label  className="col-xs-2 control-label">cdn url</label>
+            <div className="col-xs-6">
+              <h4><a href={this.state.cdnURL} target="_blank">{this.state.cdnURL}</a></h4>
+            </div>
+          </div>
           <div className="form-group" style={{'marginTop': '10px'}}>
             <div className="col-xs-offset-2 col-xs-10 btn-group">
               <button type="submit" className="btn btn-default" onClick={this.handleSubmit}>Submit</button>
