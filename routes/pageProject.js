@@ -1,5 +1,5 @@
 var _ = require('underscore');
-
+var Promise = require("bluebird");
 exports.showList = function (req, res, next) {
   req.models.PageProject.list(function (error, docs) {
     if (error) return next(error);
@@ -34,14 +34,34 @@ exports.createProject = function (req, res, next) {
   if(u.error){
     return res.render('pageProjects/add',{session: req.session,project: u});
   }
-  new req.models.PageProject(u).save(function(serror,sres){
-    if(serror){
-      u.error = serror.toString();
-      return res.render('pageProjects/create',{session: req.session,project: u});
-    }else if(sres){
-      res.redirect('/pageProjects');
-    }
-  });
+  var queryRepeat =  new Promise(function(resolve,reject){
+      req.models.PageProject.findOne({
+        name:u.name.trim()
+      },function(err,doc){
+        if (doc) {
+          u.error = 'project name repeat'
+          reject(u)
+        }else{
+          resolve()
+        }
+      })
+    });
+
+  queryRepeat
+  .then(function(){
+    new req.models.PageProject(u).save(function(serror,sres){
+      if(serror){
+        u.error = serror.toString();
+        return res.render('pageProjects/create',{session: req.session,project: u});
+      }else if(sres){
+        res.redirect('/pageProjects');
+      }
+    });
+  })
+  .catch(function(err){
+    res.render('pageProjects/add',{session: req.session,project: err});
+  })
+
 };
 exports.updateProject = function (req, res, next) {
   var body = req.body,
