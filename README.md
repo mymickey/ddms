@@ -53,6 +53,7 @@ process.env.DDMS_IMAGE_SERVER
 * js 和 css文件上传入口 与命令行提交
 * form 表单格式替换为jsonschema
 * 日常环境与预发环境（以目录名区分）
+* 以用户为维度的数据管理
 * ~~oss服务模块分离~~
 
 ### bugs:
