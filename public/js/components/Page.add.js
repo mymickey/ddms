@@ -143,7 +143,7 @@
             </div>
           </div>
           <div className="form-group">
-            <label className="col-xs-2 control-label">html</label>
+            <label className="col-xs-2 control-label">html *</label>
             <div className="col-xs-9">
               <textarea type="text" ref="htmlContent" id="htmlContent" className="hide" defaultValue=''>
 

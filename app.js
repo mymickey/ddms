@@ -16,7 +16,7 @@ var db = mongoose.connect(dbUrl, {safe: true});
 var models = require('./models');
 var routes = require('./routes/index');
 var apis = require('./apis/index');
-var OSS = require('./oss/upload-oss/index')
+var OSS = require('upload-oss/index')
 console.log('dbUrl',dbUrl);
 //middlewares
 var authorize = require('./middlewares/authorize');

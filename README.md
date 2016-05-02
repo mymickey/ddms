@@ -42,3 +42,25 @@ process.env.DDMS_IMAGE_SERVER
 ![formdatas](https://cloud.githubusercontent.com/assets/799578/8326240/53d081a8-1a92-11e5-8618-9a7b942a890a.png)
 ![images](https://cloud.githubusercontent.com/assets/799578/8326258/7722163a-1a92-11e5-957a-40ba167d3167.png)
 ![docs](https://cloud.githubusercontent.com/assets/799578/8326257/772075a0-1a92-11e5-9525-f062cfdff8e0.png)
+
+
+
+
+### TODO:
+
+* ~~page同步CDN时候附带项目目录名称~~
+* form同步到CDN
+* js 和 css文件上传入口 与命令行提交
+* form 表单格式替换为jsonschema
+* 日常环境与预发环境（以目录名区分）
+* ~~oss服务模块分离~~
+
+### bugs:
+
+* ~~copy page时候 html 文件名需要更名~~
+
+
+
+
+
+

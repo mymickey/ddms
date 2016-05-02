@@ -4,8 +4,8 @@ var path = require('path');
 var fs = require('fs');
 var fu = require('fileutil');
 var uuid = require('node-uuid');
-var uploadOSS = require('../oss/upload-oss');
-var isImg = require('../oss/upload-oss/isImg').isImg
+var uploadOSS = require('upload-oss');
+var isImg = require('upload-oss/isImg').isImg
 var fileSizeLimit = 5 * 1024 * 1024;
 var uploadDir = path.join(__dirname,'uploads');
 if (!fu.exist(uploadDir)) {fu.mkdir(uploadDir)};

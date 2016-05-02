@@ -5,7 +5,7 @@ var fs  = require('fs')
 var path = require('path')
 var extName = '.html';
 var projectDirName = 'project';
-var uploadOSS = require('../oss/upload-oss');
+var uploadOSS = require('upload-oss');
 var formProcessor = require('../formProcessor/html_form_processor')
 
 function createHTMLFile(opt){
