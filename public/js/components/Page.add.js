@@ -111,7 +111,7 @@
             reloadWarning = false;
             window.location = Actions.formList;
           }else{
-            alert('failed!');
+            alert('failed!'+JSON.stringify(res));
           }
         });
       }else{

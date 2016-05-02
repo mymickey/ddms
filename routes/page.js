@@ -60,15 +60,27 @@ exports.createPage = function (req, res, next) {
     htmlFileName:body.htmlFileName,
     form:formId
   }
-  req.models.Page.create(form, function (cerror, cres) {
-    if (cerror){
-      result.code = 0;
-      result.msg = 'Failed!';
+  req.models.Page.findOne({
+    htmlFileName:form.htmlFileName.trim()
+  },function(err,doc){
+    if (doc) {
+      res.send({
+        code:0,
+        msg:' already exist htmlFileName:'+form.htmlFileName
+      })
     }else{
-      result.data = cres;
+      req.models.Page.create(form, function (cerror, cres) {
+        if (cerror){
+          result.code = 0;
+          result.msg = 'Failed!';
+        }else{
+          result.data = cres;
+        }
+        res.send(result);
+      });
     }
-    res.send(result);
-  });
+  })
+
 };
 
 exports.updateForm = function (req, res, next) {
@@ -80,18 +92,20 @@ exports.updateForm = function (req, res, next) {
     res.send(result);
     return;
   }
+  var formId = body.formId.trim();
   var form = {
     title: body.title,
     desc: body.desc,
     htmlContent: body.htmlContent,
     updateDateTime: new Date,
-    form:body.formId,
+    form:formId,
     htmlFileName:body.htmlFileName
   }
   req.models.Form.findOne({
-    _id:body.formId
+    _id:formId
   },function(err,docs){
-    if(err || !docs){
+
+    if( (err || !docs)){
       res.send({
         code:0,
         msg:'form id not found'

@@ -11,7 +11,7 @@ module.exports = React.createClass({
       user:data.user,
       desc:data.desc,
       title:data.title,
-      formId:data.form._id,
+      formId:data.form ? data.form._id : '',
       htmlFileName:data.htmlFileName,
       cdnURL:data.cdnURL
     }

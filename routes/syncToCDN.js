@@ -4,8 +4,10 @@ var fu = require('fileutil');
 var fs  = require('fs')
 var path = require('path')
 var extName = '.html';
+var projectDirName = 'project';
 var uploadOSS = require('../oss/upload-oss');
 var formProcessor = require('../formProcessor/html_form_processor')
+
 function createHTMLFile(opt){
   return new Promise(function(resolve,reject){
     var _isHTMLFileName = isHTMLFileName(opt.htmlFileName);
@@ -28,7 +30,7 @@ function padFormData(opt){
     return opt;
   };
   return new Promise(function(resolve,reject){
-    formProcessor.processHTMLForm(opt.filepath,opt.filepath,JSON.stringify(opt.form.schemata));
+    formProcessor.processHTMLForm(opt.filepath,opt.filepath,JSON.stringify(opt.form));
     resolve(opt)
   })
 }
@@ -56,14 +58,18 @@ function isHTMLFileName(htmlFileName){
 }
 function uploadHTMLFile(opt){
   var filePath = opt.filepath;
+  var uploadOpt = {
+    fileName:filePath,
+    dirName:path.join(projectDirName,opt.project.name)
+  }
   return new Promise(function(resolve,reject){
-    uploadOSS.upload(filePath,function(err,url){
+    uploadOSS.upload(uploadOpt,function(err,url){
       if (err) {
         reject(err);
       }else{
         resolve(url)
       }
-      //fu.delete(filePath)
+      fu.delete(filePath)
     })
   })
 }
@@ -88,10 +94,11 @@ exports.syncToCDN = function (req, res, next) {
     return;
   }
   var queryData = new Promise(function(resolve,reject){
-      req.models.Page.findOne({
-        _id: id
-      })
-        .populate('form',{_id: 1,name: 1,desc: 1,schemata:1})
+        req.models.Page.findOne({
+          _id: id
+        })
+        .populate('form')
+          .populate('project')
         .exec(function (ferror, fres) {
           if (!ferror) {
             var respJSON = {};

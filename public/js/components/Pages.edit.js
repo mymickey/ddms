@@ -139,7 +139,7 @@
     handleSubmit: function(e){
       e.preventDefault();
       var data = this.state;
-      if($.trim(data.title)!='' && $.trim(data.htmlContent)!='' &&  $.trim(data.htmlFileName) ){
+      if($.trim(data.formId)!='' && $.trim(data.title)!='' && $.trim(data.htmlContent)!='' &&  $.trim(data.htmlFileName) ){
         model.update.post(data,function(success){
           var res = model.update.get();
           if(success && res && res.code){

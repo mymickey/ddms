@@ -7,7 +7,7 @@ var Promise = require("bluebird"),
 
 var page = new Schema({
   user: {type: ObjectId, ref: 'User'},
-  project: {type: ObjectId, ref: 'Project'},
+  project: {type: ObjectId, ref: 'PageProject'},
   form:{type:ObjectId,ref:'Form'},
   sid: {type: String, unique: true,'default': shortid.generate },
   title: {
@@ -26,7 +26,7 @@ var page = new Schema({
   },
   htmlContent: {type:String,required:true},
   cdnURL:String,
-  
+
   htmlFileName:String
 });
 
