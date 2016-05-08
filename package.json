@@ -1,6 +1,6 @@
 {
   "name": "ddms",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Data Drive Management System",
   "license": "MIT",
   "main": "bin/www",
@@ -47,7 +47,8 @@
     "react": "^0.13.3",
     "serve-favicon": "~2.2.0",
     "shortid": "^2.2.2",
+    "sprintf-js": "^1.0.3",
     "underscore": "^1.8.3",
-    "upload-oss":"git+https://github.com/mymickey/upload-oss"
+    "upload-oss": "git+https://github.com/mymickey/upload-oss"
   }
 }

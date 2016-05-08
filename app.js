@@ -2,6 +2,7 @@ var express = require('express');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+var sprintf = require("sprintf-js").sprintf;
 var MongoStore = require('connect-mongo')(session);
 var path = require('path');
 var busboy = require('connect-busboy');
@@ -11,8 +12,36 @@ var methodOverride = require('method-override');
 var everyauth = require('everyauth');
 var mongoose = require('mongoose');
 var restify = require('express-restify-mongoose');
-var dbUrl = process.env.MONGOHQ_URL || 'mongodb://localhost/ddms_db';//'mongodb://@localhost:27017/ddms_db';
-var db = mongoose.connect(dbUrl, {safe: true});
+//var dbUrl = process.env.MONGOHQ_URL || 'mongodb://localhost/ddms_db';//'mongodb://@localhost:27017/ddms_db';
+var mongo_config = require('./helpers/mongo_config');
+dbUrl = sprintf('mongodb://%s:%s@%s:%s,@%s:%d/%s?replicaSet=%s&authSource=admin',
+  mongo_config.username,
+  mongo_config.password,
+  mongo_config.host1,mongo_config.port1,
+  mongo_config.host2,mongo_config.port2,
+  mongo_config.dbName,
+  mongo_config.replSetName
+)
+var db = mongoose.connect(dbUrl, {
+    safe:true
+
+
+});
+mongoose.connection.on('connecting',function(args){
+  console.log('connecting',args)
+})
+mongoose.connection.on('open',function(args){
+  console.log('open',args)
+})
+mongoose.connection.on('connected', function () {
+     console.log('Mongoose connected to ' + dbUrl);
+});
+mongoose.connection.on('error',function (err) {
+      console.log('Mongoose connection error: ' + err);
+});
+mongoose.connection.on('disconnected', function () {
+      console.log('Mongoose disconnected');
+});
 var models = require('./models');
 var routes = require('./routes/index');
 var apis = require('./apis/index');
