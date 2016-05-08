@@ -24,7 +24,7 @@ module.exports = React.createClass({
               </div>
               <div className="form-group">
                 <label htmlFor="name">Name</label>
-                <input type="text" className="form-control" id="name" placeholder="Name" name="name" defaultValue={data.name}/>
+                <input type="text" placeholder="only english" className="form-control" id="name" placeholder="Name" name="name" defaultValue={data.name}/>
               </div>
               <div className="form-group">
                 <label htmlFor="desc">Description</label>

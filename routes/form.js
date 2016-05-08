@@ -129,7 +129,7 @@ exports.copyForm = function (req, res, next) {
     }
   });
 };
-
+exports.form_sync = require('./form_syncToCDN').syncToCDN;
 function formatFormSchemata(child,isSub){
   child = Array.isArray(child)?child:[];
   var filtered = [];

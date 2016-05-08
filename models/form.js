@@ -23,7 +23,8 @@ var form = new Schema({
     type: Date,
     default: Date.now
   },
-  schemata: Mixed
+  schemata: Mixed,
+  cdnURL:String
 });
 
 form.static({

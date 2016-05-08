@@ -27,7 +27,8 @@
   //actions
   var Actions = {
     formList: '/forms',
-    update: '/forms/update'
+    update: '/forms/update',
+    syncToCDN:'/forms/syncToCDN'
   }
   var Mdl = Core.Class.Model,
     getJSON = Core.RequestHandler.getJSON,
@@ -35,6 +36,21 @@
 
   //model
   function Model(){}
+  Model.prototype.syncToCDN = new Mdl({
+    post:function(d,callback){
+      var _this = this;
+      postJSON({
+        action: Actions.syncToCDN,
+        data: d,
+        complete: function (data) {
+          if (data.success) {
+            _this.set(data.data);
+          }
+          callback && callback(data.success);
+        }
+      });
+    }
+  });
   Model.prototype.update = new Mdl({
     post: function (data, callback) {
       var _this = this;
@@ -207,7 +223,7 @@
   var Form = React.createClass({
     getInitialState: function(){
       var data = window.__formData || {};
-      return {_id: data._id,title: data.title,desc: data.desc,child: data.schemata||[]}
+      return {_id: data._id,title: data.title,desc: data.desc,child: data.schemata||[],cdnURL:data.cdnURL}
     },
     componentDidMount: function(){
       $(this.getDOMNode()).on('click','.init-editor',handleEditor);
@@ -261,6 +277,22 @@
         alert('Title is required!');
       }
     },
+    handleSync:function(e){
+      e.preventDefault();
+      var data = this.state;
+
+        model.syncToCDN.post({id:this.state._id},function(success){
+          var res = model.syncToCDN.get();
+          console.log('sync to cdn :',res);
+          if(success && res && res.code){
+            alert('Done! '+res.url);
+            window.location.reload();
+          }else{
+            alert('failed!' + JSON.stringify(res));
+          }
+        });
+      
+    },
     render: function () {
       return (
         <form role="form" className="form-horizontal">
@@ -280,9 +312,16 @@
             </div>
           </div>
           <ItemList items={this.state.child} handleItemRemove={this.handleItemRemove} handleItemChange={this.handleItemChange}/>
+          <div className="form-group">
+            <label  className="col-xs-2 control-label">cdn url</label>
+            <div className="col-xs-6">
+              <h4><a href={this.state.cdnURL} target="_blank">{this.state.cdnURL}</a></h4>
+            </div>
+          </div>
           <div className="form-group" style={{'marginTop': '10px'}}>
             <div className="col-xs-offset-2 col-xs-10 btn-group">
               <button type="submit" className="btn btn-default" onClick={this.handleSubmit}>Submit</button>
+              <button className="btn btn-default" onClick={this.handleSync}>Sync to CDN</button>
               <button type="button" className="btn btn-default" onClick={this.handleAddItem} title="Add a new field"><span className="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
             </div>
           </div>

@@ -4,7 +4,7 @@ var fu = require('fileutil');
 var fs  = require('fs')
 var path = require('path')
 var extName = '.html';
-var projectDirName = 'project';
+var projectDirName = 'page_project';
 var uploadOSS = require('upload-oss');
 var formProcessor = require('../formProcessor/html_form_processor')
 

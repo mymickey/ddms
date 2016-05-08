@@ -24,6 +24,8 @@ Go to `http://localhost:3003` and login with `name : admin@admin.com` and `passw
 ```shell
 sudo lsof -P | grep ':3003' | awk '{print $2}' | xargs kill -9
 sudo lsof -P | grep ':3004' | awk '{print $2}' | xargs kill -9
+sudo lsof -P | grep ':28017' | awk '{print $2}' | xargs kill -9
+
 ```
 
 ### Environment variables
@@ -49,7 +51,7 @@ process.env.DDMS_IMAGE_SERVER
 ### TODO:
 
 * ~~page同步CDN时候附带项目目录名称~~
-* form同步到CDN
+* ~~form同步到CDN~~
 * js 和 css文件上传入口 与命令行提交
 * form 表单格式替换为jsonschema
 * 日常环境与预发环境（以目录名区分）

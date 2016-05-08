@@ -160,6 +160,7 @@ app.get('/forms/update/:id', authorize.editor, routes.form.showUpdateForm);
 app.post('/forms/update', writeLog, authorize.editor, routes.form.updateForm);
 app.get('/forms/delete/:id', writeLog, authorize.administrator, routes.form.deleteForm);
 app.get('/forms/copy/:id', writeLog, authorize.editor, routes.form.copyForm);
+app.post('/forms/syncToCDN', writeLog, authorize.editor, routes.form.form_sync);
 
 //form data
 //CRUD
