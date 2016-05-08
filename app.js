@@ -14,7 +14,7 @@ var mongoose = require('mongoose');
 var restify = require('express-restify-mongoose');
 //var dbUrl = process.env.MONGOHQ_URL || 'mongodb://localhost/ddms_db';//'mongodb://@localhost:27017/ddms_db';
 var mongo_config = require('./helpers/mongo_config');
-dbUrl = sprintf('mongodb://%s:%s@%s:%s,@%s:%d/%s?replicaSet=%s&authSource=admin',
+dbUrl = sprintf('mongodb://%s:%s@%s:%s,%s:%d/%s?replicaSet=%s&authSource=admin',
   mongo_config.username,
   mongo_config.password,
   mongo_config.host1,mongo_config.port1,
